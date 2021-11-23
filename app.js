@@ -3,8 +3,8 @@
 // Sending ETH from account1 to account2
 var Tx = require('ethereumjs-tx');
 const tx = new Tx('txObject');
-const Web3 = require('web3');
-const web3 = new Web3('http://127.0.0.1:7545'); // Also use ropsten test network
+const Web3 = require('web3'); // Setting up Web3 connection
+const web3 = new Web3('http://127.0.0.1:7545'); // Also use ropsten test network to avoid the gas costs
 
 // Create account.
 // console.log(web3.eth.accounts.create());
@@ -34,7 +34,7 @@ web3.eth.sendTransaction({
   value: web3.utils.toWei('1', 'ether'),
 });
 
-web3.eth.personal.unlockAccount;
+// web3.eth.personal.unlockAccount;
 
 // Web3 to sign the transactions locally.
 
@@ -45,8 +45,8 @@ web3.eth.getTransactionCount(account1, (err, txCount) => {
     nonce: web3.utils.toHex(txCount), //Transaction count to avoid double spending problem
     to: account2,
     value: web3.utils.toHex(web3.utils.toWei('1', 'ether')), //
-    gasLimit: web3.utils.toHex(21000), // sets a limit
-    gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')), // Cost of each unit of gas
+    gasLimit: web3.utils.toHex(21000), // sets a limit (Maximum amount of gas consumed by the transaction)
+    gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')), // Cost of each unit of gas (amount we want to pay)
   };
 
   console.log(txObject);
@@ -56,7 +56,7 @@ web3.eth.getTransactionCount(account1, (err, txCount) => {
   tx.sign(privateKey1);
 
   const serializedTransaction = tx.serialize();
-  const raw = '0x' + serializedTransaction.toString('hex');
+  const raw = '0x' + serializedTransaction.toString('hex'); // we serialize the transaction and convert it to hexadecimal string so that it can be passed to web3
 
   // Broadcast the Transaction
   web3.eth.sendSignedTransaction(raw, (err, txHash) => {
